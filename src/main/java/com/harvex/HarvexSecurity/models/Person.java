@@ -1,12 +1,5 @@
 package com.harvex.HarvexSecurity.models;
 
-/*
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-*/
-
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -14,7 +7,7 @@ import javax.validation.constraints.Size;
 
 @Entity       //there is just class with our new entity,
 // but we need also class-OBERTKA (UserDetails) in package "security"
-@Table(name = "Person")
+@Table(name = "Person", schema = "public")
 public class Person {
     @Id
     @Column(name = "id")
@@ -26,7 +19,7 @@ public class Person {
     @Column(name = "username")
     private String username;
 
-    @Min(value = 1900, message = "year more then 1900")
+    @Min(value = 1900, message = "year more than 1900")
     @Column(name = "year_of_birth")
     private int yearOfBirth;
 
