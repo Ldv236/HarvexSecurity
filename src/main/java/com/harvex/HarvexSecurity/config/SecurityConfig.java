@@ -7,7 +7,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.NoOpPasswordEncoder; for no-crypt passwords
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
@@ -28,7 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //to configure SprSec as is; + config authorization (auth yes/no, roles)
-        http.csrf().disable() //off defend cross_site_request
+        //http.csrf().disable() //off defend cross_site_request
+        http
                 .authorizeRequests()
                 .antMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                 .anyRequest().authenticated()
@@ -47,11 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure (AuthenticationManagerBuilder auth) throws Exception {
         //auth.authenticationProvider(authProvider);
-        auth.userDetailsService(personDetailsService); //default SprSec usage check username &password
+        auth.userDetailsService(personDetailsService)
+                    .passwordEncoder(getPasswordEncoder());
     }
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); //for now without encryption. Will make later
+        //return NoOpPasswordEncoder.getInstance(); //for now without encryption. Will make later
+        return new BCryptPasswordEncoder();
     }
 }
