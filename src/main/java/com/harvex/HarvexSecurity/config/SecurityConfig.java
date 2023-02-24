@@ -4,6 +4,7 @@ import com.harvex.HarvexSecurity.services.PersonDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) // for method-level autorization
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /*private final AuthProviderImpl authProvider;
@@ -32,8 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //http.csrf().disable() //off defend cross_site_request
         http
                 .authorizeRequests()
+//                .antMatchers("/admin").hasRole("ADMIN") //delete for autorization roles on method-level
                 .antMatchers("/auth/login", "/auth/registration", "/error").permitAll()
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated() //delete for input roles
+                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()                                      //this separate (devide) different logical settings
                 .formLogin().loginPage("/auth/login")
                 .loginProcessingUrl("/process_login")
