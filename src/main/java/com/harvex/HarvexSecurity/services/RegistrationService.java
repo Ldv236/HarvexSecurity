@@ -26,6 +26,7 @@ public class RegistrationService {
         person.setPassword(encodedPassword);
         */
         person.setPassword(passwordEncoder.encode(person.getPassword()));
+        person.setRole("ROLE_USER");
         peopleRepository.save(person);
     }
 }
